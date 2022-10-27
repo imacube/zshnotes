@@ -9,7 +9,7 @@ note_submit() {
     local day_path
     day_path="$HOME/Documents/zshnotes/"$cur_day".txt"
 
-    task=$(echo -E "$@" | tr '\n' '\000' | sed 's:\x00\x00.*:\n:g' | tr '\000' '\n')
+    task=$(echo -E "$@" | tr '\000' '\n')
 
     if [[ ! -e $day_path ]]; then
         mkdir -p $HOME/Documents/zshnotes
@@ -28,6 +28,31 @@ note_submit() {
 }
 autoload -U note_submit
 alias note=note_submit
+
+notes_submit() {
+    local cur_time
+    cur_time="$(date +"%r"): "
+    local cur_day
+    cur_day=$(date +"%m-%d-%y")
+    local day_path
+    day_path="$HOME/Documents/zshnotes/"$cur_day".txt"
+
+    task=$(cat "$@" | tr '\000' '\n')
+
+    if [[ ! -e $day_path ]]; then
+        mkdir -p $HOME/Documents/zshnotes
+        touch $day_path
+        fold -w 80 -s $day_path
+        echo "##########################################################" >> $day_path
+        echo "############### DAILY NOTES FOR" $cur_day "################" >> $day_path
+        echo "##########################################################\n" >> $day_path
+    fi
+
+    echo "$cur_time\u2b07\n$task"  >> $day_path
+    echo "--" >> $day_path
+}
+autoload -U notes_submit
+alias notes=notes_submit
 
 note_read() {
   local cur_day
