@@ -14,7 +14,6 @@ note_submit() {
     if [[ ! -e $day_path ]]; then
         mkdir -p $HOME/Documents/zshnotes
         touch $day_path
-        chmod +x $day_path
         fold -w 80 -s $day_path
         echo "##########################################################" >> $day_path
         echo "############### DAILY NOTES FOR" $cur_day "################" >> $day_path
